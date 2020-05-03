@@ -1,0 +1,4 @@
+sudo docker build -t datastringer:1.0 .
+
+sudo docker run -d -e SIZE=100 datastringer:1.0
+

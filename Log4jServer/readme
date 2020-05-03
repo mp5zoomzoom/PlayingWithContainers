@@ -1,0 +1,2 @@
+sudo docker run -d -p 4712:4712 -v /home/autonomous/eclipse-workspace/Log4jServer/log:/usr/local/app/log logserver:1.0
+

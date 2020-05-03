@@ -1,0 +1,38 @@
+FROM java:8-jdk-alpine
+
+#!!!!!!  Uncomment this section for ubuntu base image and comment out the alpine
+#FROM ubuntu
+
+# Install OpenJDK-8
+#RUN apt-get update && \
+#    apt-get install -y openjdk-8-jdk && \
+#    apt-get install -y ant && \
+#    apt-get clean;
+
+# Fix certificate issues
+#RUN apt-get update && \
+#    apt-get install ca-certificates-java && \
+#    apt-get clean && \
+#    update-ca-certificates -f;
+
+# Setup JAVA_HOME -- useful for docker commandline
+#ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+#RUN export JAVA_HOME
+
+#!!!!!!! End uncomment for ubuntu
+
+VOLUME /usr/local/app/log
+ARG JAR_FILE=lib/log4j-1.2.17.jar
+ARG RES_FILE=Resources/
+
+WORKDIR /usr/local/app
+
+COPY ${JAR_FILE} app.jar
+
+#ADD ${JAR_LIB_FILE} lib/
+
+COPY ${RES_FILE}log4j.properties Resources/
+
+ENTRYPOINT ["java","-classpath","app.jar","org.apache.log4j.net.SimpleSocketServer","4712","./Resources/log4j.properties"]
+
+
