@@ -3,7 +3,7 @@
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DataProducer">
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DataStringer">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
@@ -12,7 +12,7 @@
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>       	
               	
-    <path id="DataProducer.classpath">
+    <path id="DataStringer.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/log4j-1.2.17.jar"/>
         <pathelement location="lib/gson-2.6.2.jar"/>
@@ -30,7 +30,7 @@
     <target name="clean">
         <delete dir="bin"/>
     	<delete dir="com"/>
-    	<delete file="DataProducer.jar"/>
+    	<delete file="DataStringer.jar"/>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="build-subprojects,build-project" name="build"/>
@@ -39,23 +39,23 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="DataProducer.classpath"/>
+            <classpath refid="DataStringer.classpath"/>
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="DataProducer">
-        <java classname="com.ecoscover.dockerstuff.dataproducer.DataProducer" failonerror="true" fork="yes">
-            <classpath refid="DataProducer.classpath"/>
+    <target name="DataStringer">
+        <java classname="com.ecoscover.dockerstuff.datastringer.DataStringer" failonerror="true" fork="yes">
+            <classpath refid="DataStringer.classpath"/>
         </java>
     </target>
     <target depends="clean,build" name="create_run_jar">
-    	<move file="${dir.buildfile}/bin/com/ecoscover/dockerstuff/dataproducer/DataProducer.class" tofile= "${dir.buildfile}/com/ecoscover/dockerstuff/dataproducer/DataProducer.class"/>
-        <jar destfile="${dir.jarfile}/DataProducer.jar">
+    	<move file="${dir.buildfile}/bin/com/ecoscover/dockerstuff/datastringer/DataStringer.class" tofile= "${dir.buildfile}/com/ecoscover/dockerstuff/datastringer/DataStringer.class"/>
+        <jar destfile="${dir.jarfile}/DataStringer.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-                <attribute name="Rsrc-Main-Class" value="com.ecoscover.dockerstuff.dataproducer.DataProducer"/>
+                <attribute name="Rsrc-Main-Class" value="com.ecoscover.dockerstuff.datastringer.DataStringer"/>
                 <attribute name="Class-Path" value="."/>
-                <attribute name="Rsrc-Class-Path" value="./ ./bin log4j-1.2.17.jar gson-2.6.2.jar org.eclipse.paho.client.mqttv3_1.1.0.jar CommInterface-1.4.jar"/>
+                <attribute name="Rsrc-Class-Path" value="./ log4j-1.2.17.jar gson-2.6.2.jar org.eclipse.paho.client.mqttv3_1.1.0.jar CommInterface-1.4.jar"/>
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="${dir.jarfile}"/>

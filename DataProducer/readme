@@ -1,3 +1,0 @@
-sudo docker build -t dataproducer:2.0 .
-
-sudo docker run -d -e RATE=100 dataproducer:2.0

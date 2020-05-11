@@ -5,3 +5,4 @@ Test/*
 resources/*
 dl4j/*
 Log4jServer/log/*
+/.metadata/

@@ -3,7 +3,7 @@
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DataProducer">
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="ActiveMQBroker">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
@@ -12,12 +12,12 @@
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>       	
               	
-    <path id="DataProducer.classpath">
+    <path id="ActiveMQBroker.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/log4j-1.2.17.jar"/>
-        <pathelement location="lib/gson-2.6.2.jar"/>
+    	<pathelement location="lib/activemq-all-5.15.12.jar"/>
+    	<pathelement location="lib/mqtt-client-1.10.jar"/>
         <pathelement location="lib/org.eclipse.paho.client.mqttv3_1.1.0.jar"/>
-        <pathelement location="lib/CommInterface-1.4.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -30,7 +30,7 @@
     <target name="clean">
         <delete dir="bin"/>
     	<delete dir="com"/>
-    	<delete file="DataProducer.jar"/>
+    	<delete file="ActiveMQBroker.jar"/>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="build-subprojects,build-project" name="build"/>
@@ -39,30 +39,30 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="DataProducer.classpath"/>
+            <classpath refid="ActiveMQBroker.classpath"/>
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="DataProducer">
-        <java classname="com.ecoscover.dockerstuff.dataproducer.DataProducer" failonerror="true" fork="yes">
-            <classpath refid="DataProducer.classpath"/>
+    <target name="ActiveMQBroker">
+        <java classname="com.ecoscover.dockerstuff.activemq.ActiveMQBroker" failonerror="true" fork="yes">
+            <classpath refid="ActiveMQBroker.classpath"/>
         </java>
     </target>
     <target depends="clean,build" name="create_run_jar">
-    	<move file="${dir.buildfile}/bin/com/ecoscover/dockerstuff/dataproducer/DataProducer.class" tofile= "${dir.buildfile}/com/ecoscover/dockerstuff/dataproducer/DataProducer.class"/>
-        <jar destfile="${dir.jarfile}/DataProducer.jar">
+    	<move file="${dir.buildfile}/bin/com/ecoscover/dockerstuff/activemq/ActiveMQBroker.class" tofile= "${dir.buildfile}/com/ecoscover/dockerstuff/activemq/ActiveMQBroker.class"/>
+        <jar destfile="${dir.jarfile}/ActiveMQBroker.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-                <attribute name="Rsrc-Main-Class" value="com.ecoscover.dockerstuff.dataproducer.DataProducer"/>
+                <attribute name="Rsrc-Main-Class" value="com.ecoscover.dockerstuff.activemq.ActiveMQBroker"/>
                 <attribute name="Class-Path" value="."/>
-                <attribute name="Rsrc-Class-Path" value="./ ./bin log4j-1.2.17.jar gson-2.6.2.jar org.eclipse.paho.client.mqttv3_1.1.0.jar CommInterface-1.4.jar"/>
+                <attribute name="Rsrc-Class-Path" value="./ log4j-1.2.17.jar gson-2.6.2.jar org.eclipse.paho.client.mqttv3_1.1.0.jar mqtt-client-1.10.jar activemq-all-5.15.12.jar"/>
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="${dir.jarfile}"/>
             <zipfileset dir="${dir.buildfile}/lib" includes="log4j-1.2.17.jar"/>
-            <zipfileset dir="${dir.buildfile}/lib" includes="gson-2.6.2.jar"/>
             <zipfileset dir="${dir.buildfile}/lib" includes="org.eclipse.paho.client.mqttv3_1.1.0.jar"/>
-            <zipfileset dir="${dir.buildfile}/lib" includes="CommInterface-1.4.jar"/>
+        	<zipfileset dir="${dir.buildfile}/lib" includes="mqtt-client-1.10.jar"/>
+        	<zipfileset dir="${dir.buildfile}/lib" includes="activemq-all-5.15.12.jar"/>
          </jar>
     </target>
 </project>

@@ -1,2 +1,0 @@
-sudo docker run -p 61616:61616 -d -t broker:1.0
-

@@ -16,18 +16,16 @@ RUN apt-get update && \
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
 
-#ARG TARGET_FILE=bin/com/ecoscover/dockerstuff/dataproducer/DataProducer.class
 ARG BUILD_FILE=build.xml
 ARG JAR_LIB_FILE=lib/
 ARG RES_FILE=Resources/
 ARG SCR_FOLDER=src
-#ARG APP=DataProducer.jar
 
 WORKDIR /usr/local/app
 
 #ADD ${JAR_LIB_FILE} lib/
 COPY ${JAR_LIB_FILE}log4j-1.2.17.jar lib/
-COPY ${JAR_LIB_FILE}CommInterface-1.3.jar lib/
+COPY ${JAR_LIB_FILE}CommInterface-1.4.jar lib/
 COPY ${JAR_LIB_FILE}gson-2.6.2.jar lib/
 COPY ${JAR_LIB_FILE}org.eclipse.paho.client.mqttv3_1.1.0.jar lib/
 COPY ${SCR_FOLDER} src/
@@ -45,7 +43,6 @@ ARG RES_FILE=Resources/
 
 WORKDIR /usr/local/app
 COPY --from=build /usr/local/app/DataProducer.jar app.jar
-COPY --from=build /usr/local/app/bin/com/ecoscover/dockerstuff/dataproducer/DataProducer.class ./com/ecoscover/dockerstuff/dataproducer/DataProducer.class
 COPY ${RES_FILE}log4j.properties Resources/
 
 ENTRYPOINT ["java","-jar","app.jar"]
