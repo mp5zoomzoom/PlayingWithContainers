@@ -1,0 +1,43 @@
+version: '3'
+services:
+  logserver:
+    build:
+      dockerfile: Dockerfile
+      context: ./Log4jServer
+    volumes: 
+      - /home/autonomous/eclipse-workspace/Log4jServer/log:/usr/local/app/log
+    ports:
+      - '4712:4712'
+  comms:
+    build:
+      dockerfile: Dockerfile
+      context: ./ActiveMQBroker
+    ports:
+      - '61616:61616'
+    depends_on:
+      - logserver
+  producer:
+    build:
+      dockerfile: Dockerfile
+      context: ./DataProducer
+    environment:
+      RATE: 1000
+    depends_on:
+      - logserver
+      - comms
+  changer:
+    build:
+      dockerfile: Dockerfile
+      context: ./DataChanger
+    depends_on:
+      - logserver
+      - comms
+  stringer:
+    build:
+      dockerfile: Dockerfile
+      context: ./DataStringer
+    environment:
+      SIZE: 1000p
+    depends_on:
+      - logserver
+      - comms
